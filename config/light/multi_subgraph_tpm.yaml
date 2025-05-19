@@ -1,0 +1,81 @@
+n_gpu: 1
+pin_memory: true
+max_epochs: 50
+cross_validation: true
+csv_logger: true
+bootstrap_repeats: 1000
+
+optimizers:
+  all:
+    AdamW:
+      lr: 0.001
+
+models:
+  MultiGraphAndClinicalFeatureExtractor:
+    graph_input_dim: 1
+    graph_hidden_dim: 1
+    graph_output_dim: 1
+    n_genes: 20
+    clinical_numerical_dim: 3
+    clinical_categorical_dim: 11
+    genomic_embedding_dim: 8
+    clinical_embedding_dim: 0
+    n_subgraphs: 20
+  Task_Classifier:
+    task_dim: 3
+    genomic_embedding_dim: 8
+    clinical_embedding_dim: 8
+    output_dim: 1
+
+datasets:
+  project_ids: [TCGA-BRCA, TCGA-LUAD, TCGA-COAD]
+  chosen_features:
+    gene_ids:
+      TCGA-BRCA: ['ESR1', 'PGR', 'ERBB2', 'MKI67', 'PLAU', 'SSR1', 'DDX23', 'VDAC1', 'YWHAB', 'CFL1', 'TUBA1C', 'TSPAN15', 'USP9X', 'SRSF5', 'IMMP2L', 'TOP1', 'ATP2A2', 'PANX1', 'DBN1', 'NPAS1']
+      TCGA-LUAD: ['SLC2A1', 'PTK7', 'EPCAM', 'HIF1A', 'ALCAM', 'CADM1', 'PKM', 'HNRNPU', 'STAU1', 'KDM1A', 'SERBP1', 'DHX9', 'EMC1', 'SSR1', 'PUM1', 'CLTC', 'PRKRA', 'KRR1', 'OCIAD1', 'CDC73']
+      TCGA-COAD: ['ABCB1', 'EPCAM', 'ABCC1', 'ALDH1A1', 'PROM1', 'CD44', 'ABCG2', 'ALCAM', 'HNRNPL', 'HNRNPU', 'HNRNPA1', 'ZBTB2', 'SERBP1', 'RPL4', 'HNRNPK', 'HNRNPR', 'TFCP2', 'DHX9', 'PUM1', 'CPSF6']
+    clinical_numerical_ids: ['age_at_diagnosis', 'year_of_diagnosis', 'year_of_birth']
+    clinical_categorical_ids:
+      - gender
+      - race
+      - ethnicity
+  data_directory: Data/
+  cache_directory: Cache/
+  target_type: overall_survival
+  genomic_type: tpm
+  n_threads: 16
+  graph_dataset: True
+  ppi_score_name: score
+  ppi_score_threshold: 0.0
+  collect_all_genes: True
+  batch_effect_correction: True
+  multi_graph_strategy:
+    ESR1: ['ESR1', 'SSR1', 'CFL1', 'TUBA1C', 'TSPAN15', 'USP9X', 'SRSF5', 'IMMP2L', 'TOP1', 'ATP2A2', 'PANX1', 'DBN1', 'NPAS1']
+    PGR: ['PGR', 'SSR1', 'DDX23', 'VDAC1', 'YWHAB', 'TUBA1C', 'SRSF5', 'IMMP2L', 'DBN1']
+    ERBB2: ['ERBB2', 'CFL1', 'TSPAN15', 'USP9X', 'SRSF5', 'PANX1', 'DBN1', 'NPAS1']
+    MKI67: ['MKI67', 'DDX23', 'VDAC1', 'CFL1', 'TSPAN15', 'USP9X', 'SRSF5', 'IMMP2L', 'TOP1', 'ATP2A2', 'PANX1', 'NPAS1']
+    PLAU: ['PLAU', 'SSR1', 'YWHAB', 'TUBA1C', 'USP9X', 'TOP1', 'ATP2A2', 'PANX1', 'DBN1']
+    ABCB1: ['ABCB1', 'HNRNPL', 'HNRNPU', 'HNRNPA1', 'ZBTB2', 'SERBP1', 'HNRNPK', 'HNRNPR', 'DHX9', 'PUM1', 'CPSF6']
+    EPCAM_LUAD: ['EPCAM', 'HNRNPU', 'HNRNPA1', 'ZBTB2', 'RPL4', 'DHX9', 'CPSF6']
+    ABCC1: ['ABCC1', 'RPL4', 'PUM1']
+    ALDH1A1: ['ALDH1A1', 'HNRNPL', 'HNRNPU', 'HNRNPA1', 'ZBTB2', 'SERBP1', 'RPL4', 'HNRNPK', 'HNRNPR', 'TFCP2', 'DHX9', 'PUM1', 'CPSF6']
+    PROM1: ['PROM1', 'HNRNPL', 'HNRNPA1', 'ZBTB2', 'SERBP1', 'RPL4', 'HNRNPK', 'TFCP2', 'DHX9', 'PUM1', 'CPSF6']
+    CD44: ['CD44', 'HNRNPK', 'HNRNPR', 'CPSF6']
+    ABCG2: ['ABCG2', 'HNRNPL', 'SERBP1', 'RPL4', 'TFCP2']
+    ALCAM_LUAD: ['ALCAM', 'HNRNPL', 'SERBP1', 'RPL4', 'HNRNPK', 'DHX9']
+    SLC2A1: ['SLC2A1', 'STAU1', 'EMC1', 'SSR1', 'KRR1', 'OCIAD1']
+    PTK7: ['PTK7', 'HNRNPU', 'STAU1', 'KDM1A', 'SERBP1', 'DHX9', 'PUM1', 'PRKRA', 'KRR1']
+    EPCAM_COAD: ['EPCAM', 'HNRNPU', 'CLTC', 'PRKRA', 'KRR1', 'OCIAD1']
+    HIF1A: ['HIF1A', 'STAU1', 'SERBP1', 'SSR1', 'CLTC', 'CDC73']
+    ALCAM_COAD: ['ALCAM', 'STAU1', 'KDM1A', 'SERBP1', 'DHX9', 'EMC1', 'SSR1', 'PUM1', 'CLTC']
+    CADM1: ['CADM1', 'HNRNPU', 'STAU1', 'KDM1A', 'SERBP1', 'DHX9', 'EMC1', 'SSR1', 'PUM1', 'CLTC', 'PRKRA', 'KRR1', 'OCIAD1', 'CDC73']
+    PKM: ['PKM', 'HNRNPU', 'EMC1', 'KRR1', 'CDC73']
+
+datasets_manager:
+  type: TCGA_Balanced_Datasets_Manager
+  TCGA_BLC:
+    train: true
+    batch_size: 64
+    num_folds: 4
+    test_split: 0.2
+    num_workers: 4

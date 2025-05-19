@@ -1,0 +1,14 @@
+bayesian_torch
+hdf5storage
+imbalanced-learn
+inmoose
+lifelines
+lightgbm
+lxml
+pyyaml
+scikit-learn
+seaborn
+tabulate
+tensorboard
+torch
+xgboost

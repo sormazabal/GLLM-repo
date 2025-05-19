@@ -1,0 +1,65 @@
+n_gpu: 1
+pin_memory: true
+max_epochs: 50
+cross_validation: false
+csv_logger: false
+bootstrap_repeats: 1000
+
+
+optimizers:
+  all:
+    AdamW:
+      lr: 0.001
+
+models:
+  Graph_And_Clinical_Feature_Extractor:
+    graph_input_dim: 1280
+    graph_hidden_dim: 51
+    graph_output_dim: 1
+    n_genes: 20
+    clinical_numerical_dim: 3
+    clinical_categorical_dim: 11
+    genomic_embedding_dim: 8
+    clinical_embedding_dim: 8 # If clinical_embedding_dim is 0, then the clinical features will not be used.
+    graph_extractor: "pygraphormer"
+  Task_Classifier:
+    task_dim: 3
+    genomic_embedding_dim: 8
+    clinical_embedding_dim: 8
+    output_dim: 1
+
+datasets:
+  project_ids: [TCGA-BRCA, TCGA-OV] 
+  chosen_features:
+    gene_ids:
+      TCGA-BRCA: ['ESR1', 'EFTUD2', 'HSPA8', 'STAU1', 'SHMT2', 'ACTB', 'GSK3B', 'YWHAB', 'UBXN6', 'PRKRA', 'BTRC', 'DDX23', 'SSR1', 'TUBA1C', 'SNIP1', 'SRSF5', 'ERBB2', 'MKI67', 'PGR', 'PLAU'] 
+      TCGA-LUAD: [ 'HNRNPU','STAU1', 'KDM1A', 'SERBP1', 'DHX9', 'EMC1', 'SSR1', 'PUM1', 'CLTC', 'PRKRA', 'KRR1', 'OCIAD1', 'CDC73', 'SLC2A1', 'HIF1A', 'PKM', 'CADM1', 'EPCAM', 'ALCAM', 'PTK7'] 
+      TCGA-COAD: ['HNRNPL', 'HNRNPU', 'HNRNPA1', 'ZBTB2', 'SERBP1', 'RPL4', 'HNRNPK', 'HNRNPR', 'TFCP2', 'DHX9', 'RNF4', 'PUM1', 'ABCC1', 'CD44', 'ALCAM', 'ABCG2', 'ALDH1A1', 'ABCB1', 'EPCAM', 'PROM1']
+      
+    clinical_numerical_ids: ['age_at_diagnosis', 'year_of_diagnosis', 'year_of_birth']
+    clinical_categorical_ids:
+      - gender
+      - race
+      - ethnicity
+  data_directory: Data/
+  cache_directory: Cache/
+  target_type: overall_survival
+  genomic_type: tpm
+  n_threads: 16
+  graph_dataset: True
+  ppi_score_name: score
+  ppi_score_threshold: 0.4
+  collect_all_genes: True
+  batch_effect_correction: True
+  llm: ESM2_1280 #Random #BioMedicalLlama #ESM2_1280 #BERT #PROTBERT FastESM2_650
+  graph_framework: "pyg"
+  graphbert: False
+
+datasets_manager:
+  type: TCGA_Balanced_Datasets_Manager
+  TCGA_BLC:
+    train: true
+    batch_size: 32
+    num_folds: 4
+    test_split: 0.2
+    num_workers: 4

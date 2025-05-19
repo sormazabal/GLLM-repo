@@ -1,0 +1,55 @@
+n_gpu: 1
+pin_memory: true
+max_epochs: 50
+cross_validation: true
+bootstrap_repeats: 1000
+
+optimizers:
+  feat_ext:
+    SGD:
+      lr: 0.01
+      momentum: 0.9
+  clf:
+    SGD:
+      lr: 0.01
+      momentum: 0.9
+
+models:
+  Feature_Extractor:
+    genomic_dim: 20
+    clinical_numerical_dim: 3
+    clinical_categorical_dim: 11
+    genomic_embedding_dim: 8
+    clinical_embedding_dim: 8
+  Task_Classifier:
+    task_dim: 3
+    genomic_embedding_dim: 8
+    clinical_embedding_dim: 8
+    output_dim: 1
+
+datasets:
+  project_ids: [TCGA-BRCA, TCGA-LUAD, TCGA-COAD]
+  chosen_features:
+    gene_ids:
+      TCGA-BRCA: ['ACTB', 'BTRC', 'DDX23', 'ESR1', 'ERBB2', 'EFTUD2', 'GSK3B', 'HSPA8', 'MKI67', 'PGR', 'PLAU', 'PRKRA', 'SSR1', 'SHMT2', 'SNIP1', 'SRSF5', 'STAU1', 'TUBA1C', 'UBXN6', 'YWHAB']
+      TCGA-LUAD: ['ALCAM', 'CLTC', 'CADM1', 'CDC73', 'DHX9', 'EMC1', 'EPCAM', 'HIF1A', 'HNRNPU', 'KRR1', 'KDM1A', 'OCIAD1', 'PKM', 'PTK7', 'PUM1', 'PRKRA', 'SSR1', 'STAU1', 'SERBP1', 'SLC2A1']
+      TCGA-COAD: ['ZBTB2', 'TFCP2', 'SERBP1', 'RPL4', 'RNF4', 'PROM1', 'PUM1', 'HNRNPA1', 'HNRNPU', 'HNRNPR', 'HNRNPL', 'HNRNPK', 'EPCAM', 'DHX9', 'CD44', 'ALDH1A1', 'ALCAM', 'ABCG2', 'ABCB1', 'ABCC1']
+    clinical_numerical_ids: ['age_at_diagnosis', 'year_of_diagnosis', 'year_of_birth']
+    clinical_categorical_ids:
+      - gender
+      - race
+      - ethnicity
+  data_directory: Data/
+  cache_directory: Cache/
+  target_type: overall_survival
+  genomic_type: tpm
+  n_threads: 16
+
+datasets_manager:
+  type: TCGA_Balanced_Datasets_Manager
+  TCGA_BLC:
+    train: true
+    batch_size: 128
+    num_folds: 4
+    test_split: 0.2
+    num_workers: 4

@@ -1,0 +1,74 @@
+{
+    "version": 1, 
+    "disable_existing_loggers": false, 
+    "formatters": {
+        "simple": {"format": "[%(levelname)s]\t%(message)s"}, 
+        "complex": {"format": "[%(levelname)s]\t%(asctime)s - %(message)s"}
+    }, 
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler", 
+            "level": "INFO", 
+            "formatter": "simple", 
+            "stream": "ext://sys.stdout"
+            }, 
+        "root_info_file_handler": {
+            "class": "logging.handlers.RotatingFileHandler", 
+            "level": "INFO", 
+            "formatter": "complex", 
+            "filename": "info.log", 
+            "maxBytes": 10485760, 
+            "backupCount": 20,
+            "encoding": "utf8"
+        }, 
+        "root_debug_file_handler": {
+            "class": "logging.handlers.RotatingFileHandler", 
+            "level": "DEBUG", 
+            "formatter": "complex", 
+            "filename": "debug.log", 
+            "maxBytes": 10485760, 
+            "backupCount": 20,
+            "encoding": "utf8"
+        }, 
+        "preprocess_debug_file_handler": {
+            "class": "logging.handlers.RotatingFileHandler", 
+            "level": "DEBUG", 
+            "formatter": "complex", 
+            "filename": "preprocess.log", 
+            "maxBytes": 10485760, 
+            "backupCount": 20,
+            "encoding": "utf8"
+        },
+        "runner_debug_file_handler": {
+            "class": "logging.handlers.RotatingFileHandler", 
+            "level": "DEBUG", 
+            "formatter": "complex", 
+            "filename": "run.log", 
+            "maxBytes": 10485760, 
+            "backupCount": 20,
+            "encoding": "utf8"
+        }
+    }, 
+    "loggers": {
+        "preprocess": {
+            "level": "DEBUG",
+            "handlers": [
+                "preprocess_debug_file_handler"
+            ]
+        },
+        "runner": {
+            "level": "DEBUG",
+            "handlers": [
+                "runner_debug_file_handler"
+            ]
+        }
+    },
+    "root": {
+        "level": "DEBUG", 
+        "handlers": [
+            "console", 
+            "root_info_file_handler",
+            "root_debug_file_handler"
+        ]
+    }
+}
